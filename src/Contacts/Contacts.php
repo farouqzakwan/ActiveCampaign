@@ -90,9 +90,13 @@ class Contacts
         return self::return($response);
     }
 
-    static function deleteContact()
+    static function deleteContact($contactID)
     {
-        # code
+        $response =  Http::withHeaders([
+            'Api-Token' => config('activecampaign.activecampaign_key')
+         ])
+        ->delete(config('activecampaign.activecampaign_url').'/api/3/contacts/'.$contactID);
+        return self::return($response);
     }
 
     static function contactScore($contactID)
@@ -104,9 +108,20 @@ class Contacts
         return self::return($response);
     }
 
-    static function bulkImportContact()
+    static function bulkImportContact($contacts,$callback = array())
     {
-        # code...
+        if (!empty($callback)) 
+        {
+            $body = json_encode(array('contacts' => $contacts,'callback' => $callback));
+        }else{
+            $body = json_encode(array('contacts' => $contacts));
+        }
+
+        $response =  Http::withBody($body,'json')->withHeaders([
+                    'Api-Token' => config('activecampaign.activecampaign_key')
+                ])
+                ->post(config('activecampaign.activecampaign_url').'/api/3/import/bulk_import');
+        return self::return($response);
     }
 
     private static function return($response)
