@@ -1,6 +1,6 @@
 <?php
 
-namespace Farouqzakwan\ActiveCampaign;
+namespace farouqzakwan\ActiveCampaign;
 
 use Illuminate\Support\ServiceProvider;
 
