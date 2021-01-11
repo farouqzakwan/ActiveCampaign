@@ -58,7 +58,7 @@ class Contacts
         return self::return($response);
     }
 
-    public function getTags($contactID)
+    static function getTags($contactID)
     {
         $response =  Http::withHeaders([
             'Api-Token' => config('activecampaign.activecampaign_key')
