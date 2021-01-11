@@ -67,6 +67,15 @@ class Contacts
         return self::return($response);
     }
 
+    static function removeTag($contagTagID)
+    {
+        $response =  Http::withHeaders([
+            'Api-Token' => config('activecampaign.activecampaign_key')
+         ])
+        ->delete(config('activecampaign.activecampaign_url').'/api/3/contactTags/'.$contagTagID);   
+        return self::return($response);
+    }
+
     static function subsContactList($listID,$contactID,$statusID)
     {
         $body = json_encode(array(
