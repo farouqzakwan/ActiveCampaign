@@ -58,6 +58,15 @@ class Contacts
         return self::return($response);
     }
 
+    public function getTags($contactID)
+    {
+        $response =  Http::withHeaders([
+            'Api-Token' => config('activecampaign.activecampaign_key')
+         ])
+        ->get(config('activecampaign.activecampaign_url').'/api/3/contacts/'.$contactID.'/contactTags');   
+        return self::return($response);
+    }
+
     static function subsContactList($listID,$contactID,$statusID)
     {
         $body = json_encode(array(
