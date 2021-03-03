@@ -5,12 +5,69 @@ use Illuminate\Support\Facades\Http;
 
 class Automations
 {
+    protected static $sideloading;
+    protected static $limit = 20;
+    protected static $offset = 0;
+    protected static $orders;
+    
+    static function sideloading($sideloading)
+    {
+       foreach ($sideloading as $key => $sideload) 
+       {
+           if ($key != 0) 
+           {
+                self::$sideloading .= ',';
+           }
+           self::$sideloading .= $sideload;
+           return __CLASS__;
+       }
+    }
+
+    static function limit($limit)
+    {
+        self::$limit = $limit;
+        return __CLASS__;
+    }
+
+    static function offset($offset)
+    {
+        self::$offset = $offset;  
+        return __CLASS__;  
+    }
+
+    static function page($page)
+    {
+        self::$offset = ($page*self::$limit)-self::$limit;
+        return __CLASS__;
+    }
+
+    static function ordering($orders)
+    {
+        $counter = 0;
+        foreach ($orders as $key => $order) 
+        {
+            if($counter != 0)
+            {
+                self::$orders .= '&';
+            }
+            $counter++;
+            self::$orders .= 'orders['.$key.']='.$order;
+        }
+        return __CLASS__;
+    }
+
     static function listAllAutomations()
     {
+        $url = config('activecampaign.activecampaign_url').'/api/3/automations?limit='.self::$limit.'&offset='.self::$offset;
+        if (!empty(self::$sideloading)) 
+        {
+            $url .= '&include='.self::$sideloading;
+        }
+
         $response =  Http::withHeaders([
             'Api-Token' => config('activecampaign.activecampaign_key')
          ])
-        ->get(config('activecampaign.activecampaign_url').'/api/3/automations/');
+        ->get($url);
         return self::return($response);
     }
 
